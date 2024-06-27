@@ -219,6 +219,7 @@ const App = () => {
       let txid = "";
       if (isJoyIdAddress(ckbAddress)) {
         signedTx = await signRawTransaction(daoTx, ckbAddress);
+        console.log(">>>signedTx: ", signedTx);
         txid = await sendTransaction(signedTx);
       } else {
         if (signer) {
@@ -266,6 +267,7 @@ const App = () => {
 
       if (isJoyIdAddress(ckbAddress)) {
         signedTx = await signRawTransaction(daoTx, ckbAddress);
+        console.log(">>>signedTx: ", signedTx);
         // Send the transaction to the RPC node.
         txid = await sendTransaction(signedTx);
       } else {
@@ -311,6 +313,7 @@ const App = () => {
 
       if (isJoyIdAddress(ckbAddress)) {
         signedTx = await signRawTransaction(daoTx, ckbAddress);
+        console.log(">>>signedTx: ", signedTx);
         // Send the transaction to the RPC node.
         txid = await sendTransaction(signedTx);
       } else {
