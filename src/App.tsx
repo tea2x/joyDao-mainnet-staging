@@ -158,6 +158,7 @@ const App = () => {
     try {
       setConnectModalIsOpen(false);
       const authData = await connect();
+      console.log(">>>key type: ", authData.keyType)
       await settleUserInfo(authData.address);
     } catch (e: any) {
       enqueueSnackbar("Error: " + e.message, { variant: "error" });
