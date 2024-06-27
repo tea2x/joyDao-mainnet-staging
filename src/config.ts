@@ -137,7 +137,7 @@ export const MINIMUM_CHANGE_CAPACITY = 63; //63ckb for joyidLock/moniLock cell
 export const CKB_SHANNON_RATIO = 100_000_000;
 
 //joyid lock signature length is 347 bytes (370bytes in other cases)
-export const JOYID_SIGNATURE_PLACEHOLDER_DEFAULT = "0x" + "0".repeat(780);
+export const JOYID_SIGNATURE_PLACEHOLDER_DEFAULT = "0x" + "0".repeat(768);
 //joyid lock signature length is 85 bytes
 export const OMNILOCK_SIGNATURE_PLACEHOLDER_DEFAULT = "0x" + "0".repeat(170);
 
