@@ -1,0 +1,951 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 100%;
+  border: none;
+  border-radius: 10px;
+  background-image: url("./images/plume-signin-background_portrait.png");
+  background-size: auto;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  overflow: auto;
+  position: absolute;
+}
+
+.info-board {
+  position: relative;
+  font-size: large;
+  font-family: sans-serif;
+  font-weight: bold;
+  padding: 10px;
+  color: rgb(86, 43, 27);
+  border-radius: 10px;
+  background: hsla(0, 0%, 72%, 0.834);
+  margin: 20px auto;
+  width: 320px;
+}
+
+.deposit-field {
+  font-size: 16px;
+}
+
+.deposit-textbox {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 220px;
+  padding: 3px;
+
+  position: relative;
+  font-size: large;
+  font-family: sans-serif;
+  font-weight: bold;
+  color: rgb(86, 43, 27);
+}
+
+.underline {
+  display: inline-block;
+  border-bottom: 1px solid rgb(0, 0, 0);
+  width: 210px;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-bottom: -5px;
+  cursor: text;
+}
+
+.text-based-info {
+  display: inline-flexbox;
+  font-weight: bolder;
+  padding: 2px;
+  margin: 0 auto;
+}
+
+.notif {
+  /* max-width: 200px; */
+  z-index: 9999;
+}
+
+.title {
+  font-size: 2.5em;
+  color: #f8f8f8;
+  text-shadow: 1px 1px 0 #505050, 2px 2px 0 #333;
+  transform: rotate(-0.5deg);
+  margin: 50px auto;
+  cursor: pointer;
+  border: 1px solid #505050;
+  padding: 5px;
+  background-color: #505050;
+  height: 65px;
+  width: 200px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  z-index: 0;
+}
+
+.title:hover {
+  color: #a8e72f;
+  background-color: #000;
+}
+
+.account-deposit-buttons {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 60px;
+}
+
+.signin-button {
+  background-color: #f8f8f8;
+  color: #505050;
+  padding: 10px 20px;
+  border: 1px solid #505050;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 40px;
+  box-shadow: 1px 1px 0 #555, 2px 2px 0 #333;
+  transition: transform 0.3s ease;
+  position: relative;
+  top: 40vh;
+  margin: 0 auto;
+}
+
+.signin-button:hover {
+  transform: translateY(-3px);
+  background-color: #000;
+  color: #f8f8f8;
+}
+
+.joyid-connect {
+  background-color: #f8f8f8;
+  color: #505050;
+  justify-content: left;
+  box-shadow: 2px 2px 0 #354f32, 4px 4px 0 #2b5328;
+  padding: 1px 20px;
+  background-image: url("./images/joyid-logo.png");
+  background-size: 30px;
+  background-position: right 10px center;
+  background-repeat: no-repeat;
+  top: 25px;
+  margin: 0 auto 20px auto;
+}
+
+.joyid-connect:hover {
+  background-color: #000;
+  color: #f8f8f8;
+}
+
+.other-wallet-connect {
+  background-color: #f8f8f8;
+  color: #505050;
+  box-shadow: 2px 2px 0 #81773c, 4px 4px 0 #694427;
+  margin-top: 10%;
+  top: 30px;
+  margin: 20px auto 12px auto;
+}
+
+.other-wallet-connect:hover {
+  background-color: #000;
+  color: #f8f8f8;
+}
+
+.account-button {
+  background-color: #f8f8f8;
+  color: #505050;
+  padding: 10px 10px 10px 10px;
+  border: 3px solid #505050;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(2px);
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  width: 200px;
+  height: 40px;
+  background-size: 25px;
+  background-position: right 10px center;
+  background-repeat: no-repeat;
+  font-weight: bold;
+  position: relative;
+  box-shadow: 1px 1px 0 #555, 2px 2px 0 #333;
+  transition: transform 0.3s ease;
+}
+
+.copy-sign {
+  position: relative;
+  font-size: 20px;
+  font-weight: bolder;
+  color: rgb(126, 78, 9);
+  left: 10px;
+  margin: 0 auto;
+}
+
+.copy-sign:hover {
+  opacity: 1;
+  animation: rainbow 5s linear infinite;
+  cursor: pointer;
+}
+
+@keyframes rainbow {
+  14% {
+    color: orange;
+  }
+  28% {
+    color: yellow;
+  }
+  42% {
+    color: lime;
+  }
+  71% {
+    color: indigo;
+  }
+  85% {
+    color: violet;
+  }
+}
+
+.account-button:hover {
+  transform: translateY(-3px);
+  background-color: #000;
+  color: #a8e72f;
+}
+
+.account-button {
+  background-color: #f8f8f8;
+  color: #505050;
+  padding: 5px 10px;
+  border: 1px solid #505050;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(2px);
+  font-size: 15px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 1px 1px 0 #555, 2px 2px 0 #333;
+  position: relative;
+  margin-right: 20px;
+  width: 200px;
+  height: 40px;
+}
+
+.account-button:hover {
+  background-color: #000;
+  color: #a8e72f;
+}
+
+@keyframes fadeIntro {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.deposit-button {
+  background-color: #f8f8f8;
+  color: #505050;
+  padding: 10px 20px;
+  border: 1px solid #505050;
+  border-radius: 5px;
+  cursor: pointer;
+  transform: translateY(2px);
+  font-size: 15px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: 25px;
+  background-position: right 10px center;
+  background-repeat: no-repeat;
+  font-weight: bold;
+  width: 200px;
+  height: 40px;
+  box-shadow: 1px 1px 0 #555, 2px 2px 0 #333;
+  transition: transform 0.3s ease;
+}
+
+.deposit-button:hover {
+  transform: translateY(-3px);
+  background-color: #000;
+  color: #a8e72f;
+}
+
+/* .max-deposit {
+  position: relative;
+  left: -40px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #597415;
+}
+
+.max-deposit:hover {
+  opacity: 1;
+  animation: rainbow 5s linear infinite;
+} */
+
+.entrance-decor {
+  content: "";
+  position: absolute;
+  left: 0.5%;
+  width: 100%;
+  height: 100%;
+  background-image: url("./images/poster.png");
+  background-size: 90vh;
+  background-position: top 55% center;
+  background-repeat: no-repeat;
+  z-index: inherit;
+}
+
+.dao-link {
+  color: textColor;
+  font-size: 1em;
+  position: absolute;
+  bottom: 35%;
+  cursor: pointer;
+}
+
+.cell-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  max-width: 80%;
+  grid-gap: 0px;
+  margin: 0 auto 20px auto;
+}
+
+@keyframes blink {
+  0% {
+    border-color: #bd491398;
+  }
+  50% {
+    border-color: #ffffff;
+  }
+  100% {
+    border-color: #00c891;
+  }
+}
+
+.no-deposit-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 5%;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #f8f8f8;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 2px 2px 0 #505050;
+  background-color: #505050;
+  border-radius: 10px;
+  padding: 20px;
+  animation: bounce 1s ease-in-out infinite;
+  position: relative;
+  top: 100px;
+  border: 1px solid #505050;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.no-deposit-message:hover {
+  color: #a8e72f;
+  background-color: #000;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.signin-loading-overlay {
+  position: sticky;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(224, 224, 224, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.loading-circle {
+  border: 5px solid transparent;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  animation: spin 1s linear infinite, loading-rainbow 5s linear infinite;
+  z-index: 999;
+}
+
+@keyframes loading-rainbow {
+  0% {
+    border-top-color: red;
+  }
+  16.67% {
+    border-top-color: yellow;
+  }
+  33.33% {
+    border-top-color: green;
+  }
+  50% {
+    border-top-color: cyan;
+  }
+  66.67% {
+    border-top-color: blue;
+  }
+  83.33% {
+    border-top-color: magenta;
+  }
+  100% {
+    border-top-color: red;
+  }
+
+  0% {
+    border-right-color: red;
+  }
+  16.67% {
+    border-right-color: yellow;
+  }
+  33.33% {
+    border-right-color: green;
+  }
+  50% {
+    border-right-color: cyan;
+  }
+  66.67% {
+    border-right-color: blue;
+  }
+  83.33% {
+    border-right-color: magenta;
+  }
+  100% {
+    border-right-color: red;
+  }
+
+  0% {
+    border-left-color: red;
+  }
+  16.67% {
+    border-left-color: yellow;
+  }
+  33.33% {
+    border-left-color: green;
+  }
+  50% {
+    border-left-color: cyan;
+  }
+  66.67% {
+    border-left-color: blue;
+  }
+  83.33% {
+    border-left-color: magenta;
+  }
+  100% {
+    border-left-color: red;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-circle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  top: 40vh;
+}
+
+.tx-confirmation-message {
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.description {
+  position: relative;
+  top: -40px;
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #cecece;
+  transform: rotate(-0.5deg);
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.dao-cell-dummy {
+  border: 1px solid #ddd;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  width: var(--cellWidth);
+  height: var(--cellHeight);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f8f8;
+  position: relative;
+  opacity: 0.2;
+  box-shadow: 1px 1px 0 #555, 2px 2px 0 #333;
+}
+
+.dao-cell {
+  border: 1px solid var(--backgroundColor);
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  width: var(--cellWidth);
+  height: var(--cellHeight);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--backgroundColor);
+  transform: perspective(1000px) rotateY(1deg);
+  backface-visibility: hidden;
+  transition: transform 0.3s ease-in-out;
+  animation: fadeIntro 0.5s ease-in-out;
+  font-size: 1.2em;
+  position: relative;
+  box-shadow: 1px 1px 0 #555, 2px 2px 0 #333;
+  cursor: pointer;
+}
+
+.dao-cell:hover {
+  transform: translateY(-3px);
+  color: textColor;
+  position: relative;
+}
+
+.dao-cell-button {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05), 0 0 20px rgba(0, 0, 0, 0.1),
+    0 0 30px rgba(0, 0, 0, 0.15);
+  background-color: var(--buttonColor);
+  color: var(--textColor);
+  border-width: 0.1px;
+  border-radius: 2px;
+  border-color: #000000;
+  cursor: pointer;
+  font-size: 0.8em;
+  position: absolute;
+  bottom: 5px;
+  width: 110px;
+  height: 30px;
+  margin: 0px auto;
+  z-index: 1;
+  transition: transform 0.2s ease;
+}
+
+.dao-cell-button::before {
+  content: "";
+  position: absolute;
+  top: -1.5px;
+  left: -1.5px;
+  width: 3px;
+  height: 3px;
+  background-color: #fbff00;
+  border-radius: 50%;
+}
+
+.dao-cell-button.progressing {
+  animation: shake 2s;
+  animation-iteration-count: infinite;
+}
+
+.dao-cell-button.ripe {
+  animation: shake 0.9s;
+  animation-iteration-count: infinite;
+}
+
+.button-border-progress-bar {
+  width: 110px;
+  height: 30px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #fbff00 99.99%, transparent),
+    linear-gradient(to bottom, #fbff00 99.99%, transparent),
+    linear-gradient(to right, #fbff00 99.99%, transparent),
+    linear-gradient(to bottom, #fbff00 99.99%, transparent);
+  background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
+  background-repeat: no-repeat;
+  background-position: var(--backgroundPos);
+  position: relative;
+  top: 45px;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.button-border-progress-bar.ripe {
+  animation: shake 0.9s;
+  animation-iteration-count: infinite;
+}
+
+.ReactModal__Content {
+  max-width: 300px;
+  margin: 20px auto;
+  padding: 10px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 10px !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05), 0 0 20px rgba(0, 0, 0, 0.1),
+    0 0 30px rgba(0, 0, 0, 0.15);
+  transition: transform 0.5s ease-in-out;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  align-self: flex-start;
+  margin-top: 25vh;
+  min-height: 20vh;
+  animation: fadeIntro 0.5s ease-in-out;
+}
+
+.ReactModal__Overlay {
+  background-color: rgba(18, 19, 24, 0.7) !important;
+}
+
+.modal-loading-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-loading-circle {
+  border: 4px solid #333;
+  border-top-color: transparent;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.modal-loading-circle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+button.proceed,
+button.cancel {
+  padding: 10px 20px;
+  border-width: 0.5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 5px;
+  transition: transform 0.3s ease;
+}
+
+button.proceed {
+  background-color: #6ec824; /* Green */
+  color: rgb(0, 0, 0);
+}
+
+button.proceed:hover {
+  transform: translateY(-3px);
+}
+
+button.proceed:disabled {
+  background-color: #cccccc; /* Gray */
+  cursor: not-allowed;
+}
+
+button.cancel {
+  background-color: #e55603; /* Red */
+  color: rgb(0, 0, 0);
+}
+
+button.cancel:hover {
+  transform: translateY(-3px);
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+
+.dao-cell.ripe {
+  animation: shake 0.5s;
+  animation-iteration-count: infinite;
+}
+
+.connect-wallet {
+  font-size: 1.3em;
+  font-weight: bold;
+  width: 200px;
+  text-align: center;
+  margin: 5px 10px;
+}
+
+.main-wallet-option {
+  top: 20px;
+  max-height: 200px;
+  min-height: 170px;
+}
+
+.headline-separation {
+  border-top: 1px solid #000;
+  width: 180px;
+  margin: 0 auto;
+}
+
+.deposit-message {
+  margin: 0.1em;
+  font-size: 1em;
+  font-weight: bold;
+  color: cadetblue;
+}
+
+.deposit-circular-progress-bar {
+  margin: 10px;
+}
+
+.highlight {
+  margin: 0.1em;
+  font-size: 1em;
+  font-weight: bold;
+  animation: warningAnimation 1s infinite alternate;
+}
+
+@keyframes warningAnimation {
+  0% {
+    color: cadetblue;
+    transform: scale(1);
+  }
+  100% {
+    color: rgb(255, 123, 0);
+    transform: scale(1.1);
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .info-board {
+    font-size: medium;
+    width: 270px;
+  }
+
+  .underline {
+    width: 180px;
+  }
+
+  .title {
+    font-size: 2.4em;
+    height: 45px;
+    width: 150px;
+    font-weight: 600;
+  }
+
+  .description {
+    top: -30px;
+  }
+
+  .account-deposit-buttons {
+    margin-bottom: 30px;
+  }
+
+  .signin-button,
+  .account-button,
+  .deposit-button {
+    width: 150px;
+    height: 45px;
+    padding: 5px 10px 5px 10px;
+    font-size: 14px;
+    margin-bottom: 30px;
+    font-weight: bold;
+  }
+
+  .signin-button {
+    background-position: right 10px center;
+    background-size: 35px;
+    padding-left: 2px;
+    width: 180px;
+    font-size: 1.5em;
+    position: relative;
+    top: 50vh;
+  }
+
+  .copy-sign {
+    font-size: 16px;
+  }
+
+  .joyid-connect {
+    font-size: 1em;
+    top: 25px;
+    padding: 1px 15px;
+    background-size: 30px;
+  }
+
+  .other-wallet-connect {
+    font-size: 1em;
+    top: 25px;
+  }
+
+  .entrance-decor {
+    content: "";
+    position: absolute;
+    top: 50px;
+    left: 2%;
+    background-size: 70vh;
+    background-position: top 50% center;
+  }
+
+  .cell-grid {
+    max-width: 100%;
+  }
+
+  .dao-cell-dummy {
+    border-radius: 5px;
+    font-size: 16px;
+    height: var(--cellHeight);
+  }
+
+  .dao-cell {
+    border-radius: 5px;
+    font-size: 16px;
+    height: var(--cellHeight);
+  }
+
+  .dao-cell-button {
+    font-size: 0.8em;
+    border-radius: 2px;
+    width: 90px;
+    height: 30px;
+  }
+
+  .dao-cell-button::before {
+    border-radius: 7px;
+  }
+
+  .button-border-progress-bar {
+    width: 90px;
+    height: 30px;
+    border-radius: 2px;
+    background-size: 100% 1.5px, 1.5px 100%, 100% 1.5px, 1.5px 100%;
+    position: relative;
+    top: 35px;
+    z-index: 1;
+  }
+
+  /* .max-deposit {
+    font-size: smaller;
+  } */
+
+  .no-deposit-message {
+    font-size: 1em;
+  }
+
+  .tx-confirmation-message {
+    font-size: 14px;
+  }
+
+  .ReactModal__Content {
+    max-width: 40vh;
+    padding: 20px;
+    min-width: 200px;
+  }
+}
