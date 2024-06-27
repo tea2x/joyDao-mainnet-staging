@@ -127,7 +127,7 @@ export const TEST_NET_CONFIG = isMainNet
       },
     };
 
-export const FEE_RATE = isMainNet ? 2000 : 1500; // shannon per KB
+export const FEE_RATE = isMainNet ? 1500 : 1500; // shannon per KB
 export const MIN_FEE_RATE = 1000; // 1000 shannon per KB
 export const MAX_TX_SIZE = 30_000; // in Bytes
 // omnilock|joyid lock script argument is 2 bytes longer than that of secp256k1's.
