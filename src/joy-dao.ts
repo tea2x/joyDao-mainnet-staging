@@ -207,6 +207,10 @@ export const buildWithdrawTransaction = async (
 ): Promise<CKBTransaction> => {
   let txSkeleton = TransactionSkeleton({ cellProvider: INDEXER });
 
+    // when a device is using joyid subkey,
+  // prioritizing Cota celldeps at the head of the celldep list
+  txSkeleton = await appendSubkeyDeviceCellDep(txSkeleton, joyIdAuth);
+
   // adding cell deps
   const config = getConfig();
   const fromScript = addressToScript(ckbAddress, { config });
@@ -238,8 +242,6 @@ export const buildWithdrawTransaction = async (
   } else {
     throw new Error("Only joyId and omnilock addresses are supported");
   }
-
-  txSkeleton = await appendSubkeyDeviceCellDep(txSkeleton, joyIdAuth);
 
   // add dao input cell
   txSkeleton = txSkeleton.update("inputs", (i) => i.push(daoDepositCell));
@@ -320,6 +322,10 @@ export const buildUnlockTransaction = async (
 
   let txSkeleton = TransactionSkeleton({ cellProvider: INDEXER });
 
+  // when a device is using joyid subkey,
+  // prioritizing Cota celldeps at the head of the celldep list
+  txSkeleton = await appendSubkeyDeviceCellDep(txSkeleton, joyIdAuth);
+
   //  adding celldeps
   const template = config.SCRIPTS.DAO!;
   const daoCellDep = {
@@ -364,8 +370,6 @@ export const buildUnlockTransaction = async (
   } else {
     throw new Error("Only joyId and omnilock addresses are supported");
   }
-
-  txSkeleton = await appendSubkeyDeviceCellDep(txSkeleton, joyIdAuth);
 
   // find the deposit cell and
   // enrich DAO withdrawal cell data with block hash info
