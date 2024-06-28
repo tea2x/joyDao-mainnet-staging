@@ -32,8 +32,7 @@ import { dao } from "@ckb-lumos/common-scripts";
 import { EpochSinceValue } from "@ckb-lumos/base/lib/since";
 import { BI, BIish } from "@ckb-lumos/bi";
 import { bytes, number } from "@ckb-lumos/codec";
-import { getSubkeyUnlock, getCotaTypeScript } from '@joyid/ckb';
-import { blake160, serializeScript } from '@nervosnetwork/ckb-sdk-utils'
+import { getSubkeyUnlock, getCotaTypeScript } from '@joyid/ckb'
 
 const INDEXER = new Indexer(INDEXER_URL);
 const rpc = new RPC(NODE_URL);
@@ -48,16 +47,6 @@ export interface DaoCell extends Cell {
   completedCycles: number;
   currentCycleProgress: number;
   cycleEndInterval: number; //epoch
-}
-
-interface BaseReq {}
-type Bytes = string;
-type Hex = string;
-type Byte2 = number;
-interface SubkeyUnlockReq extends BaseReq {
-  lockScript: Bytes
-  pubkeyHash: Hex
-  algIndex: Byte2
 }
 
 export async function getBlockHash(blockNumber: string) {
@@ -466,18 +455,12 @@ export const addWitnessPlaceHolder = async (
 
       // for subkey device
       if (joyIdAuth && joyIdAuth.keyType === 'sub_key') {
-        console.log(">>>joyIdAuth: ", joyIdAuth)
-
-        const pubkeyHash = append0x(blake160(append0x(joyIdAuth.pubkey), 'hex'))
-        const req: SubkeyUnlockReq = {
-          lockScript: serializeScript(addressToScript(joyIdAuth.address)),
-          pubkeyHash,
-          algIndex: 1, // secp256r1
-        }
-        const { unlockEntry } = await joyIdAuth.aggregator.generateSubkeyUnlockSmt(req)
-        console.log(">>>mark3.1 | bingo | append0x(unlockEntry): ", append0x(unlockEntry))
-        // let unlockEntry = await getSubkeyUnlock("https://cota.nervina.dev/aggregator", joyIdAuth);
-        outputType: append0x(unlockEntry);
+        console.log(">>>mark3.1 | bingo")
+        let unlockEntry = await getSubkeyUnlock("https://cota.nervina.dev/aggregator", joyIdAuth);
+        console.log(">>>unlockEntry before: ", unlockEntry)
+        unlockEntry = unlockEntry.startsWith('0x') ? unlockEntry : `0x${unlockEntry}`
+        console.log(">>>unlockEntry after: ", unlockEntry)
+        outputType: unlockEntry;
       }
 
       witness = bytes.hexify(
@@ -492,10 +475,6 @@ export const addWitnessPlaceHolder = async (
 
   return transaction;
 };
-
-const append0x = (hex?: string): string => {
-  return hex?.startsWith('0x') ? hex : `0x${hex}`
-}
 
 export const extraFeeCheck = (transaction: TransactionSkeletonType) => {
   const inputCapacity = transaction.inputs
