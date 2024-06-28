@@ -113,7 +113,9 @@ export const buildDepositTransaction = async (
 
   // adding cell deps
   txSkeleton = await appendSubkeyDeviceCellDep(txSkeleton, joyIdAuth);
-  
+
+  console.log(">>>just added cota celldeps | tklelton: ", txSkeleton)
+
   const config = getConfig();
   const fromScript = addressToScript(ckbAddress, { config });
   if (fromScript.codeHash == JOYID_CELLDEP.codeHash) {
