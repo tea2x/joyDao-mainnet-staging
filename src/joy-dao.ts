@@ -1,4 +1,4 @@
-import { CKBTransaction, getSubkeyUnlock, getCotaTypeScript } from '@joyid/ckb'
+import { CKBTransaction } from '@joyid/ckb'
 import {
   CellDep,
   DepType,
@@ -19,7 +19,6 @@ import {
   OMNILOCK_CELLDEP,
   FEE_RATE,
   MAX_TX_SIZE,
-  isMainNet
 } from "./config";
 import {
   addressToScript,
@@ -101,16 +100,16 @@ export const buildDepositTransaction = async (
   amount: bigint,
   joyIdAuth: any = null
 ): Promise<CKBTransaction> => {
-  let txSkeleton = TransactionSkeleton({ cellProvider: INDEXER });
-
   amount = ckbytesToShannons(amount);
   if (amount < ckbytesToShannons(BigInt(DAO_MINIMUM_CAPACITY))) {
     throw new Error("Mimum DAO deposit is 104 CKB.");
   }
 
+  let txSkeleton = TransactionSkeleton({ cellProvider: INDEXER });
+  
+  // when a device is using joyid subkey,
+  // prioritizing Cota celldeps at the head of the celldep list
   txSkeleton = await appendSubkeyDeviceCellDep(txSkeleton, joyIdAuth);
-
-  console.log(">>>just added cota celldeps | tklelton: ", JSON.stringify(txSkeleton, null, 2))
   
   // generating basic dao transaction skeleton
   txSkeleton = await dao.deposit(txSkeleton, ckbAddress, ckbAddress, amount);
@@ -162,6 +161,7 @@ export const buildDepositTransaction = async (
   );
 
   txSkeleton = await addWitnessPlaceHolder(txSkeleton, joyIdAuth);
+
   // Regulating fee, and making a change cell
   // 111 is the size difference adding the 1 anticipated change cell
   // TODO because payFeeByRate is not generalized enough for different signing standards,
@@ -186,8 +186,8 @@ export const buildDepositTransaction = async (
   txSkeleton = txSkeleton.update("outputs", (i) => i.push(change));
   // safe check
   extraFeeCheck(txSkeleton);
+
   const daoDepositTx: Transaction = createTransactionFromSkeleton(txSkeleton);
-  console.log(">>>daoDepositTx: ", JSON.stringify(daoDepositTx, null, 2))
   return daoDepositTx as CKBTransaction;
 };
 
@@ -207,7 +207,7 @@ export const buildWithdrawTransaction = async (
 ): Promise<CKBTransaction> => {
   let txSkeleton = TransactionSkeleton({ cellProvider: INDEXER });
 
-    // when a device is using joyid subkey,
+  // when a device is using joyid subkey,
   // prioritizing Cota celldeps at the head of the celldep list
   txSkeleton = await appendSubkeyDeviceCellDep(txSkeleton, joyIdAuth);
 
