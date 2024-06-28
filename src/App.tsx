@@ -219,6 +219,7 @@ const App = () => {
       if (isJoyIdAddress(ckbAddress)) {
         const daoTx = await buildDepositTransaction(ckbAddress, amount, joyidInfo);
         const signedTx = await signRawTransaction(daoTx, ckbAddress);
+        console.log(">>>signedTx: ", signedTx)
         txid = await sendTransaction(signedTx);
       } else if (signer) {
         const daoTx = await buildDepositTransaction(ckbAddress, amount);
