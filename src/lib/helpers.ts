@@ -455,9 +455,12 @@ export const addWitnessPlaceHolder = async (
 
       // for subkey device
       if (joyIdAuth && joyIdAuth.keyType === 'sub_key') {
+        console.log(">>>mark3.1 | bingo")
         let unlockEntry = await getSubkeyUnlock("aggregator-url", joyIdAuth);
+        console.log(">>>unlockEntry before: ", unlockEntry)
         unlockEntry = unlockEntry.startsWith('0x') ? unlockEntry : `0x${unlockEntry}`
-        outputType: "0x" + unlockEntry;
+        console.log(">>>unlockEntry after: ", unlockEntry)
+        outputType: unlockEntry;
       }
 
       witness = bytes.hexify(
