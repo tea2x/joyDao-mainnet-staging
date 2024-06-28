@@ -402,7 +402,6 @@ export const appendSubkeyDeviceCellDep = async (
       throw new Error("Cota cell doesn't exist");
     }
     const cotaCell = cotaCells[0];
-    console.log(">>> cotaCell: ", cotaCell)
 
     transaction = transaction.update("cellDeps", (i) =>
       i.push({
@@ -456,7 +455,6 @@ export const addWitnessPlaceHolder = async (
 
       // for subkey device
       if (joyIdAuth && joyIdAuth.keyType === 'sub_key') {
-        console.log(">>>mark3.1 | bingo")
         let unlockEntry = await getSubkeyUnlock("https://cota.nervina.dev/mainnet-aggregator", joyIdAuth);
         unlockEntry = unlockEntry.startsWith('0x') ? unlockEntry : `0x${unlockEntry}`
         outputTypeScriptWitness = unlockEntry;

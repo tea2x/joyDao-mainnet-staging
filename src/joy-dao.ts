@@ -114,7 +114,7 @@ export const buildDepositTransaction = async (
   // adding cell deps
   txSkeleton = await appendSubkeyDeviceCellDep(txSkeleton, joyIdAuth);
 
-  console.log(">>>just added cota celldeps | tklelton: ", txSkeleton)
+  console.log(">>>just added cota celldeps | tklelton: ", JSON.stringify(txSkeleton, null, 2))
 
   const config = getConfig();
   const fromScript = addressToScript(ckbAddress, { config });
@@ -147,9 +147,6 @@ export const buildDepositTransaction = async (
     throw new Error("Only joyId and omnilock addresses are supported");
   }
 
-  console.log(">>>mark1")
-  
-  console.log(">>>mark2 | txSkeleton: ", JSON.stringify(txSkeleton, null, 2))
   // calculating fee for a really large dummy tx (^100 inputs) and adding input capacity cells
   let fee = calculateFeeCompatible(MAX_TX_SIZE, FEE_RATE).toNumber();
   const requiredCapacity =
@@ -163,9 +160,8 @@ export const buildDepositTransaction = async (
   txSkeleton = txSkeleton.update("inputs", (i) =>
     i.concat(collectedInputs.inputCells)
   );
-  console.log(">>>mark3")
+
   txSkeleton = await addWitnessPlaceHolder(txSkeleton, joyIdAuth);
-  console.log(">>>mark4")
   // Regulating fee, and making a change cell
   // 111 is the size difference adding the 1 anticipated change cell
   // TODO because payFeeByRate is not generalized enough for different signing standards,
@@ -190,7 +186,6 @@ export const buildDepositTransaction = async (
   txSkeleton = txSkeleton.update("outputs", (i) => i.push(change));
   // safe check
   extraFeeCheck(txSkeleton);
-  console.log(">>>mark5")
   const daoDepositTx: Transaction = createTransactionFromSkeleton(txSkeleton);
   console.log(">>>daoDepositTx: ", JSON.stringify(daoDepositTx, null, 2))
   return daoDepositTx as CKBTransaction;
