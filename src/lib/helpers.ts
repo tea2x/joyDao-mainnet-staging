@@ -431,6 +431,7 @@ export const addWitnessPlaceHolder = async (
     let witness = "0x";
     let lockScriptWitness = "0x";
     let inputTypeScriptWitness;
+    let outputTypeScriptWitness;
 
     const lockHash = computeScriptHash(input.cellOutput.lock);
     if (!uniqueLocks.has(lockHash)) {
@@ -457,16 +458,15 @@ export const addWitnessPlaceHolder = async (
       if (joyIdAuth && joyIdAuth.keyType === 'sub_key') {
         console.log(">>>mark3.1 | bingo")
         let unlockEntry = await getSubkeyUnlock("https://cota.nervina.dev/mainnet-aggregator", joyIdAuth);
-        console.log(">>>unlockEntry before: ", unlockEntry)
         unlockEntry = unlockEntry.startsWith('0x') ? unlockEntry : `0x${unlockEntry}`
-        console.log(">>>unlockEntry after: ", unlockEntry)
-        outputType: unlockEntry;
+        outputTypeScriptWitness = unlockEntry;
       }
 
       witness = bytes.hexify(
         blockchain.WitnessArgs.pack({
           lock: lockScriptWitness,
           inputType: inputTypeScriptWitness,
+          outputType: outputTypeScriptWitness
         })
       );
     }
