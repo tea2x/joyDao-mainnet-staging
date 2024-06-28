@@ -112,6 +112,8 @@ export const buildDepositTransaction = async (
   txSkeleton = await dao.deposit(txSkeleton, ckbAddress, ckbAddress, amount);
 
   // adding cell deps
+  txSkeleton = await appendSubkeyDeviceCellDep(txSkeleton, joyIdAuth);
+  
   const config = getConfig();
   const fromScript = addressToScript(ckbAddress, { config });
   if (fromScript.codeHash == JOYID_CELLDEP.codeHash) {
@@ -144,7 +146,7 @@ export const buildDepositTransaction = async (
   }
 
   console.log(">>>mark1")
-  txSkeleton = await appendSubkeyDeviceCellDep(txSkeleton, joyIdAuth);
+  
   console.log(">>>mark2 | txSkeleton: ", JSON.stringify(txSkeleton, null, 2))
   // calculating fee for a really large dummy tx (^100 inputs) and adding input capacity cells
   let fee = calculateFeeCompatible(MAX_TX_SIZE, FEE_RATE).toNumber();
