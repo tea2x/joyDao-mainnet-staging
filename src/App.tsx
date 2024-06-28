@@ -41,6 +41,7 @@ import {
 } from "react-circular-progressbar";
 
 const App = () => {
+  const [joyidInfo, setJoyidInfo] = React.useState<any>(null);
   const [balance, setBalance] = React.useState<Balance | null>(null);
   const [ckbAddress, setCkbAddress] = React.useState("");
   const [depositCells, setDepositCells] = React.useState<DaoCell[]>([]);
@@ -158,7 +159,8 @@ const App = () => {
     try {
       setConnectModalIsOpen(false);
       const authData = await connect();
-      console.log(">>>key type: ", authData.keyType)
+      console.log(">>>keyType: ", authData.keyType)
+      setJoyidInfo(authData);
       await settleUserInfo(authData.address);
     } catch (e: any) {
       enqueueSnackbar("Error: " + e.message, { variant: "error" });
@@ -198,8 +200,9 @@ const App = () => {
       enqueueSnackbar("Error: " + e.message, { variant: "error" });
     }
   };
+
   const onDeposit = async () => {
-    // verify input
+    console.log(">>>joyidInfo keyType: ", joyidInfo.keyType)
     if (depositAmount == "") {
       enqueueSnackbar("Please input amount!", { variant: "error" });
       return;
@@ -212,35 +215,22 @@ const App = () => {
 
     try {
       const amount = BigInt(depositAmount);
-      // reset state var
-      // setDepositAmount('');
-      const daoTx = await buildDepositTransaction(ckbAddress, amount);
-
-      let signedTx;
       let txid = "";
       if (isJoyIdAddress(ckbAddress)) {
-        signedTx = await signRawTransaction(daoTx, ckbAddress);
-        console.log(">>>signedTx: ", signedTx);
+        const daoTx = await buildDepositTransaction(ckbAddress, amount, joyidInfo);
+        const signedTx = await signRawTransaction(daoTx, ckbAddress);
         txid = await sendTransaction(signedTx);
+      } else if (signer) {
+        const daoTx = await buildDepositTransaction(ckbAddress, amount);
+        txid = await signer.sendTransaction(daoTx);
       } else {
-        if (signer) {
-          enqueueSnackbar(`Openning ${wallet.name} ...`, {
-            variant: "success",
-          });
-          txid = await signer.sendTransaction(daoTx);
-        } else {
-          throw new Error("Wallet disconnected. Reconnect!");
-        }
+        throw new Error("Wallet disconnected. Reconnect!");
       }
 
       enqueueSnackbar(`Transaction Sent: ${txid}`, { variant: "success" });
       setIsWaitingTxConfirm(true);
       setIsLoading(true);
-
-      // Wait for the transaction to confirm.
       await waitForTransactionConfirmation(txid);
-
-      // update deposit/withdrawal list and balance
       setIsWaitingTxConfirm(false);
       setDepositAmount("");
       await updateDaoList("deposit");
@@ -250,44 +240,30 @@ const App = () => {
   };
 
   const onWithdraw = async (cell: DaoCell) => {
-    // Open the modal
     setModalIsOpen(true);
     setIsModalMessageLoading(true);
-
-    // Save the cell for later
     setCurrentCell(cell);
     setIsModalMessageLoading(false);
   };
 
-  const _onWithdraw = async (cell: DaoCell) => {
+  const _onWithdraw = async (depositCell: DaoCell) => {
     try {
-      const daoTx = await buildWithdrawTransaction(ckbAddress, cell);
-
-      let signedTx;
       let txid = "";
-
       if (isJoyIdAddress(ckbAddress)) {
-        signedTx = await signRawTransaction(daoTx, ckbAddress);
-        console.log(">>>signedTx: ", signedTx);
-        // Send the transaction to the RPC node.
+        const daoTx = await buildWithdrawTransaction(ckbAddress, depositCell, joyidInfo);
+        const signedTx = await signRawTransaction(daoTx, ckbAddress);
         txid = await sendTransaction(signedTx);
+      } else if (signer) {
+        const daoTx = await buildWithdrawTransaction(ckbAddress, depositCell);
+        txid = await signer.sendTransaction(daoTx);
       } else {
-        if (signer) {
-          txid = await signer.sendTransaction(daoTx);
-        } else {
-          throw new Error("Wallet disconnected. Reconnect!");
-        }
+        throw new Error("Wallet disconnected. Reconnect!");
       }
 
       enqueueSnackbar(`Transaction Sent: ${txid}`, { variant: "success" });
-
       setIsWaitingTxConfirm(true);
       setIsLoading(true);
-
-      // Wait for the transaction to confirm.
       await waitForTransactionConfirmation(txid);
-
-      // update deposit/withdrawal list and balance
       setIsWaitingTxConfirm(false);
       await updateDaoList("all");
     } catch (e: any) {
@@ -296,44 +272,30 @@ const App = () => {
   };
 
   const onUnlock = async (cell: DaoCell) => {
-    // Open the modal
     setModalIsOpen(true);
     setIsModalMessageLoading(true);
-
-    // Save the cell for later
     setCurrentCell(cell);
     setIsModalMessageLoading(false);
   };
 
   const _onUnlock = async (withdrawalCell: DaoCell) => {
     try {
-      const daoTx = await buildUnlockTransaction(ckbAddress, withdrawalCell);
-
-      let signedTx;
       let txid = "";
-
       if (isJoyIdAddress(ckbAddress)) {
-        signedTx = await signRawTransaction(daoTx, ckbAddress);
-        console.log(">>>signedTx: ", signedTx);
-        // Send the transaction to the RPC node.
+        const daoTx = await buildUnlockTransaction(ckbAddress, withdrawalCell, joyidInfo);
+        const signedTx = await signRawTransaction(daoTx, ckbAddress);
         txid = await sendTransaction(signedTx);
+      } else if (signer) {
+        const daoTx = await buildUnlockTransaction(ckbAddress, withdrawalCell);
+        txid = await signer.sendTransaction(daoTx);
       } else {
-        if (signer) {
-          txid = await signer.sendTransaction(daoTx);
-        } else {
-          throw new Error("Wallet disconnected. Reconnect!");
-        }
+        throw new Error("Wallet disconnected. Reconnect!");
       }
 
       enqueueSnackbar(`Transaction Sent: ${txid}`, { variant: "success" });
-
       setIsWaitingTxConfirm(true);
       setIsLoading(true);
-
-      // Wait for the transaction to confirm.
       await waitForTransactionConfirmation(txid);
-
-      // update deposit/withdrawal list and balance
       setIsWaitingTxConfirm(false);
       await updateDaoList("withdraw");
     } catch (e: any) {
@@ -508,7 +470,7 @@ const App = () => {
       });
     }, 5);
 
-    return () => clearInterval(interval); // Clean up the interval
+    return () => clearInterval(interval);
   }, []);
 
   // calculate background position for an overlay,
