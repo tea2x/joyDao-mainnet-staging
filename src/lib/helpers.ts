@@ -468,7 +468,7 @@ export const addWitnessPlaceHolder = async (
       if (joyIdAuth && joyIdAuth.keyType === 'sub_key') {
         console.log(">>>joyIdAuth: ", joyIdAuth)
 
-        const pubkeyHash = append0x(blake160(append0x(joyIdAuth.connectData.pubkey), 'hex'))
+        const pubkeyHash = append0x(blake160(append0x(joyIdAuth.pubkey), 'hex'))
         const req: SubkeyUnlockReq = {
           lockScript: serializeScript(addressToScript(joyIdAuth.address)),
           pubkeyHash,
