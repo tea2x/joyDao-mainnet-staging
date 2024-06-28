@@ -108,14 +108,14 @@ export const buildDepositTransaction = async (
     throw new Error("Mimum DAO deposit is 104 CKB.");
   }
 
+  txSkeleton = await appendSubkeyDeviceCellDep(txSkeleton, joyIdAuth);
+
+  console.log(">>>just added cota celldeps | tklelton: ", JSON.stringify(txSkeleton, null, 2))
+  
   // generating basic dao transaction skeleton
   txSkeleton = await dao.deposit(txSkeleton, ckbAddress, ckbAddress, amount);
 
   // adding cell deps
-  txSkeleton = await appendSubkeyDeviceCellDep(txSkeleton, joyIdAuth);
-
-  console.log(">>>just added cota celldeps | tklelton: ", JSON.stringify(txSkeleton, null, 2))
-
   const config = getConfig();
   const fromScript = addressToScript(ckbAddress, { config });
   if (fromScript.codeHash == JOYID_CELLDEP.codeHash) {
