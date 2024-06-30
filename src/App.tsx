@@ -251,7 +251,7 @@ const App = () => {
       if (isJoyIdAddress(ckbAddress) || !signer)
         return;
 
-      const transferTx = await buildTransferAll(signer!, transferTo, transferAmount);
+      const transferTx = await buildTransferAll(signer!, transferTo);
       const txid = await signer.sendTransaction(transferTx);
 
       enqueueSnackbar(`Transaction Sent: ${txid}`, { variant: "success" });
