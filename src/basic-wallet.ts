@@ -15,8 +15,6 @@ import { getConfig, Config } from "@ckb-lumos/config-manager";
 const { computeScriptHash } = utils;
 import { bytes } from "@ckb-lumos/codec";
 
-
-
 const indexer = new Indexer(INDEXER_URL);
 
 // inherit from ccc demo
@@ -36,7 +34,40 @@ function fixedPointFrom(val: FixedPointLike, decimals = 8): FixedPoint {
   return lVal + BigInt(r.slice(0, decimals).padEnd(decimals, "0"));
 }
 
-// for non-joyid wallet
+// this function is only for omnilock
+const addWitnessPlaceHolder = (
+  transaction: TransactionSkeletonType
+) => {
+  if (transaction.witnesses.size !== 0) {
+    throw new Error(
+      "This function can only be used on an empty witnesses structure."
+    );
+  }
+
+  let uniqueLocks = new Set();
+  for (const input of transaction.inputs) {
+    let witness = "0x";
+    let lockScriptWitness = "0x";
+
+    const lockHash = computeScriptHash(input.cellOutput.lock);
+    if (!uniqueLocks.has(lockHash)) {
+      uniqueLocks.add(lockHash);
+
+      lockScriptWitness = OMNILOCK_SIGNATURE_PLACEHOLDER_DEFAULT;
+
+      witness = bytes.hexify(
+        blockchain.WitnessArgs.pack({
+          lock: lockScriptWitness
+        })
+      );
+    }
+    transaction = transaction.update("witnesses", (w) => w.push(witness));
+  }
+
+  return transaction;
+};
+
+// is only for omnilock
 export const buildTransfer = async (
   signer:Signer,
   to: Address,
@@ -161,37 +192,3 @@ export const buildTransferAll = async (
   return transferTx as CKBTransaction;
 
 }
-
-
-// this function is only for omnilock
-export const addWitnessPlaceHolder = (
-  transaction: TransactionSkeletonType
-) => {
-  if (transaction.witnesses.size !== 0) {
-    throw new Error(
-      "This function can only be used on an empty witnesses structure."
-    );
-  }
-
-  let uniqueLocks = new Set();
-  for (const input of transaction.inputs) {
-    let witness = "0x";
-    let lockScriptWitness = "0x";
-
-    const lockHash = computeScriptHash(input.cellOutput.lock);
-    if (!uniqueLocks.has(lockHash)) {
-      uniqueLocks.add(lockHash);
-
-      lockScriptWitness = OMNILOCK_SIGNATURE_PLACEHOLDER_DEFAULT;
-
-      witness = bytes.hexify(
-        blockchain.WitnessArgs.pack({
-          lock: lockScriptWitness
-        })
-      );
-    }
-    transaction = transaction.update("witnesses", (w) => w.push(witness));
-  }
-
-  return transaction;
-};

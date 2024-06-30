@@ -1,4 +1,4 @@
-export const ISMAINNET = false;
+export const ISMAINNET = true;
 
 export const NODE_URL = ISMAINNET
   ? "https://mainnet.ckb.dev/"
