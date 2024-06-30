@@ -30,7 +30,7 @@ import {
   collectDeposits,
   collectWithdrawals,
 } from "./joy-dao";
-import { buildTransfer } from "./basic-wallet";
+import { buildTransfer, buildTransferAll } from "./basic-wallet";
 import { ccc } from "@ckb-ccc/connector-react";
 import { Signer } from "@ckb-ccc/core";
 import { ClientPublicTestnet, ClientPublicMainnet } from "@ckb-ccc/core";
@@ -251,7 +251,7 @@ const App = () => {
       if (isJoyIdAddress(ckbAddress) || !signer)
         return;
 
-      const transferTx = await buildTransfer(signer!, transferTo, transferAmount);
+      const transferTx = await buildTransferAll(signer!, transferTo, transferAmount);
       const txid = await signer.sendTransaction(transferTx);
 
       enqueueSnackbar(`Transaction Sent: ${txid}`, { variant: "success" });
