@@ -67,7 +67,7 @@ const App = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isWaitingTxConfirm, setIsWaitingTxConfirm] = React.useState(false);
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
-  const [pickedDaoCell, setCurrentCell] = React.useState<DaoCell | null>(null);
+  const [pickedDaoCell, setPickedDaoCell] = React.useState<DaoCell | null>(null);
   const [currentTx, setCurrentTx] = React.useState<{tx: CKBTransaction | null, fee: number}>({tx: null, fee: 0});
   const [daoMode, setDaoMode] = React.useState<DaoFunction | null>(DaoFunction.none);
   const [tipEpoch, setTipEpoch] = React.useState<number>();
@@ -170,7 +170,6 @@ const App = () => {
       } catch (e: any) {
         enqueueSnackbar("Error: " + e.message, { variant: "error" });
       }
-      setIsLoading(false);
     }
   };
 
@@ -220,7 +219,7 @@ const App = () => {
     }
   };
 
-  const onCCCTransfer = async () => {
+  const onTransfer = async () => {
     if (transferAmount == "") {
       enqueueSnackbar("Please fill address and amount!", { variant: "error" });
       return;
@@ -260,6 +259,7 @@ const App = () => {
       await waitForTransactionConfirmation(txid);
       setIsWaitingTxConfirm(false);
       await updateJoyDaoInfo("balance");
+      setIsLoading(false);
     } catch (e: any) {
       enqueueSnackbar("Error: " + e.message, { variant: "error" });
     }
@@ -340,6 +340,7 @@ const App = () => {
       setIsWaitingTxConfirm(false);
       setDepositAmount("");
       await updateJoyDaoInfo("deposit");
+      setIsLoading(false);
     } catch (e: any) {
       enqueueSnackbar("Error: " + e.message, { variant: "error" });
     }
@@ -354,7 +355,7 @@ const App = () => {
       setModalIsOpen(true);
       setIsDaoTransitMsgLoading(true);
       await preBuildWithdraw(cell);
-      setCurrentCell(cell);
+      setPickedDaoCell(cell);
       setIsDaoTransitMsgLoading(false);
     } catch (e: any) {
       enqueueSnackbar("Error: " + e.message, { variant: "error" });
@@ -380,6 +381,8 @@ const App = () => {
       await waitForTransactionConfirmation(txid);
       setIsWaitingTxConfirm(false);
       await updateJoyDaoInfo("all");
+      setIsLoading(false);
+      setPickedDaoCell(null);
     } catch (e: any) {
       enqueueSnackbar("Error: " + e.message, { variant: "error" });
     }
@@ -393,8 +396,9 @@ const App = () => {
       setDaoMode(DaoFunction.unlocking);
       setModalIsOpen(true);
       setIsDaoTransitMsgLoading(true);
-      await preBuildUnlock(cell);
-      setCurrentCell(cell);
+      if (cell.ripe)
+        await preBuildUnlock(cell);
+      setPickedDaoCell(cell);
       setIsDaoTransitMsgLoading(false);
     } catch (e: any) {
       enqueueSnackbar("Error: " + e.message, { variant: "error" });
@@ -420,6 +424,8 @@ const App = () => {
       await waitForTransactionConfirmation(txid);
       setIsWaitingTxConfirm(false);
       await updateJoyDaoInfo("withdraw");
+      setIsLoading(false);
+      setPickedDaoCell(null);
     } catch (e: any) {
       enqueueSnackbar("Error: " + e.message, { variant: "error" });
     }
@@ -607,24 +613,66 @@ const App = () => {
   // calculate background position for an overlay,
   // showing cycle progress bar on top of each deposit
   function calculateButtonBorderProgressBar(percentage: number) {
-    let backgroundPos = '';
+    let backgroundPos = "";
     const targetBtnSize = {
       width: windowWidth <= 768 ? 90 : 110,
       height: windowWidth <= 768 ? 30 : 30,
     };
     const deltaH = windowWidth <= 768 ? 1.5 : 2;
     const deltaW = windowWidth <= 768 ? 1.5 : 2;
-    const totalLength = (targetBtnSize.width + targetBtnSize.height)*2;
+    const totalLength = (targetBtnSize.width + targetBtnSize.height) * 2;
     const borderLen = (percentage / 100) * totalLength;
 
     if (borderLen <= targetBtnSize.width) {
-      backgroundPos = '' + (-targetBtnSize.width + borderLen) + 'px 0px, ' + (targetBtnSize.width - deltaW) + 'px -' + targetBtnSize.height + 'px, ' + targetBtnSize.width + 'px ' + (targetBtnSize.height - deltaH) + 'px, 0px ' + targetBtnSize.height + 'px';
-    } else if (borderLen <= (targetBtnSize.width + targetBtnSize.height)) {
-      backgroundPos = '0px 0px, ' + (targetBtnSize.width - deltaW) + 'px ' + (-targetBtnSize.height + (borderLen - targetBtnSize.width)) + 'px, ' + targetBtnSize.width + 'px ' + (targetBtnSize.height - deltaH) + 'px, 0px ' + targetBtnSize.height + 'px';
-    } else if (borderLen <= (targetBtnSize.width * 2 + targetBtnSize.height)) {
-      backgroundPos = '0px 0px, ' + (targetBtnSize.width - deltaW) + 'px 0px, ' + (targetBtnSize.width - (borderLen - targetBtnSize.width - targetBtnSize.height)) + 'px ' + (targetBtnSize.height - deltaH) + 'px, 0px ' + targetBtnSize.height +'px';
+      backgroundPos =
+        "" +
+        (-targetBtnSize.width + borderLen) +
+        "px 0px, " +
+        (targetBtnSize.width - deltaW) +
+        "px -" +
+        targetBtnSize.height +
+        "px, " +
+        targetBtnSize.width +
+        "px " +
+        (targetBtnSize.height - deltaH) +
+        "px, 0px " +
+        targetBtnSize.height +
+        "px";
+    } else if (borderLen <= targetBtnSize.width + targetBtnSize.height) {
+      backgroundPos =
+        "0px 0px, " +
+        (targetBtnSize.width - deltaW) +
+        "px " +
+        (-targetBtnSize.height + (borderLen - targetBtnSize.width)) +
+        "px, " +
+        targetBtnSize.width +
+        "px " +
+        (targetBtnSize.height - deltaH) +
+        "px, 0px " +
+        targetBtnSize.height +
+        "px";
+    } else if (borderLen <= targetBtnSize.width * 2 + targetBtnSize.height) {
+      backgroundPos =
+        "0px 0px, " +
+        (targetBtnSize.width - deltaW) +
+        "px 0px, " +
+        (targetBtnSize.width -
+          (borderLen - targetBtnSize.width - targetBtnSize.height)) +
+        "px " +
+        (targetBtnSize.height - deltaH) +
+        "px, 0px " +
+        targetBtnSize.height +
+        "px";
     } else {
-      backgroundPos = '0px 0px, ' + (targetBtnSize.width - deltaW) + 'px 0px, 0px ' + (targetBtnSize.height - deltaH) + 'px, 0px ' + (targetBtnSize.height - (borderLen - (targetBtnSize.width * 2) - targetBtnSize.height)) + 'px';
+      backgroundPos =
+        "0px 0px, " +
+        (targetBtnSize.width - deltaW) +
+        "px 0px, 0px " +
+        (targetBtnSize.height - deltaH) +
+        "px, 0px " +
+        (targetBtnSize.height -
+          (borderLen - targetBtnSize.width * 2 - targetBtnSize.height)) +
+        "px";
     }
     return backgroundPos;
   }
@@ -772,14 +820,16 @@ const App = () => {
         >
           <p className="dao-transition-message">
             Cycle{" "}
-            {!pickedDaoCell?.isDeposit && pickedDaoCell?.ripe
-              ? pickedDaoCell?.completedCycles!
-              : pickedDaoCell?.completedCycles! + 1} | Progress {pickedDaoCell?.currentCycleProgress!}%
+            {pickedDaoCell ? (!pickedDaoCell?.isDeposit && pickedDaoCell?.ripe
+                ? pickedDaoCell?.completedCycles!
+                : pickedDaoCell?.completedCycles! + 1)
+              : "~"}{" "}
+            | Progress: {pickedDaoCell ? pickedDaoCell.currentCycleProgress! + "%" : "~"}
           </p>
 
           {!pickedDaoCell?.isDeposit && (
             <p className="dao-transition-message">
-              Compensation: {pickedDaoCell ? getCompensation(pickedDaoCell) : ' ~ CKB'}
+              Compensation: {pickedDaoCell ? getCompensation(pickedDaoCell) : '~'}
             </p>
           )}
 
@@ -787,12 +837,14 @@ const App = () => {
             (!pickedDaoCell?.ripe ? (
               <p className="dao-transition-message highlight">
                 Complete in:{" "}
-                {(pickedDaoCell?.cycleEndInterval! + 1) / 6 > 2
-                  ? `${(
-                      (pickedDaoCell?.cycleEndInterval! + 1) /
-                      6
-                    ).toFixed(2)}d`
-                  : `${(pickedDaoCell?.cycleEndInterval! + 1) * 4}h`}
+                {pickedDaoCell ? 
+                  ((pickedDaoCell?.cycleEndInterval! + 1) / 6 > 2
+                    ? `${(
+                        (pickedDaoCell?.cycleEndInterval! + 1) /
+                        6
+                      ).toFixed(2)}d`
+                    : `${(pickedDaoCell?.cycleEndInterval! + 1) * 4}h`)
+                  : "~"}
               </p>
             ) : (
               <p className="dao-transition-message highlight">Complete now!</p>
@@ -829,9 +881,11 @@ const App = () => {
             )
           )}
 
-          <p className="dao-transition-message">
-            Tx fee: {currentTx.fee ? `${(currentTx.fee / CKB_SHANNON_RATIO).toFixed(8)} CKB` : `${" ~ CKB"}`}
-          </p>
+          {!(!pickedDaoCell?.isDeposit && !pickedDaoCell?.ripe) && (
+            <p className="dao-transition-message">
+              Tx fee: {currentTx.fee ? `${(currentTx.fee / CKB_SHANNON_RATIO).toFixed(8)} CKB` : `${" ~ CKB"}`}
+            </p>
+          )}
 
         </CircularProgressbarWithChildren>
       </div>
@@ -843,10 +897,14 @@ const App = () => {
       <div>
         <p className="dao-transition-message headline">Depositing {depositAmount} CKB</p>
         <h3 className="headline-separation"> </h3>
-        <p className="dao-transition-message deposit"> • Withdrawals can be initiated any time later on but each withdrawal is only completed at the end of its 30-day cycle</p>
+        <p className="dao-transition-message deposit">
+          • Withdrawals can be initiated any time later on but each withdrawal is only completed at the end of its 30-day cycle
+        </p>
         {/* <p className="dao-transition-message deposit"> • Each withdrawal is only completed at the end of its 30-day cycle</p> */}
         {/* <p className="dao-transition-message-sample-image"></p> */}
-        <p className="dao-transition-message deposit"> • Tx fee: {currentTx.fee ? `${(currentTx.fee / CKB_SHANNON_RATIO).toFixed(8)} CKB` : `${" ~ CKB"}`}</p>
+        <p className="dao-transition-message deposit">
+          • Tx fee: {currentTx.fee ? `${(currentTx.fee / CKB_SHANNON_RATIO).toFixed(8)} CKB` : `${" ~ CKB"}`}
+        </p>
       </div>
     );
   }
@@ -857,6 +915,7 @@ const App = () => {
         isOpen={modalIsOpen}
         onRequestClose={() => {
           setModalIsOpen(false);
+          setPickedDaoCell(null);
         }}
       >
         {isDaoTransitMsgLoading && (
@@ -875,7 +934,7 @@ const App = () => {
           <button
             className="proceed"
             disabled={
-              pickedDaoCell
+              (daoMode == DaoFunction.unlocking && pickedDaoCell)
                 ? !pickedDaoCell.isDeposit && !pickedDaoCell.ripe
                 : false
             }
@@ -900,6 +959,7 @@ const App = () => {
             className="cancel"
             onClick={() => {
               setModalIsOpen(false);
+              setPickedDaoCell(null);
             }}
           >
             Cancel
@@ -1061,7 +1121,7 @@ const App = () => {
             <button
               className="deposit-button"
               onClick={(e) => {
-                onCCCTransfer();
+                onTransfer();
               }}
             >
               Transfer
